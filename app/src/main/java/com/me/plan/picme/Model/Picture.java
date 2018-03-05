@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class Picture {
     public String title;
-    public Date publishDate;
+    public String date;
     public String url;
-    public User user;
+    public String user;
 }

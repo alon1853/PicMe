@@ -1,9 +1,13 @@
 package com.me.plan.picme;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import com.me.plan.picme.Model.Model;
 import com.me.plan.picme.Model.ModelFirebase;
 import com.me.plan.picme.Model.Picture;
 import com.me.plan.picme.Model.User;
+import com.me.plan.picme.ViewModel.PicturesListViewModel;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -24,10 +29,12 @@ import java.util.List;
 public class PicsActivity extends AppCompatActivity {
     private Model model;
     PicturesListAdapter adapter;
-    List<Picture> data = new LinkedList<Picture>();
+    private PicturesListViewModel picturesListViewModel;
+    private List<Picture> picturesList;
 
     public PicsActivity() {
         model = Model.instance;
+        picturesList = new LinkedList<>();
     }
 
     @Override
@@ -41,39 +48,17 @@ public class PicsActivity extends AppCompatActivity {
             finish();
         }
 
-        User user = new User();
-        user.name = "Alon";
-        user.email = "test@google.com";
-        Picture p = new Picture();
-        p.title = "title";
-        p.publishDate = new Date();
-        p.user = user;
-        Picture p2 = new Picture();
-        p2.title = "title2";
-        p2.publishDate = new Date();
-        p2.user = user;
-        Picture p3 = new Picture();
-        p3.title = "title3";
-        p3.publishDate = new Date();
-        p3.user = user;
-        Picture p4 = new Picture();
-        p4.title = "title4";
-        p4.publishDate = new Date();
-        p4.user = user;
-        Picture p5 = new Picture();
-        p5.title = "title5";
-        p5.publishDate = new Date();
-        p5.user = user;
-        Picture p6 = new Picture();
-        p6.title = "title6";
-        p6.publishDate = new Date();
-        p6.user = user;
-        data.add(p);
-        data.add(p2);
-        data.add(p3);
-        data.add(p4);
-        data.add(p5);
-        data.add(p6);
+        picturesListViewModel = ViewModelProviders.of(this).get(PicturesListViewModel.class);
+
+        final Observer<List<Picture>> picturesListObserver = new Observer<List<Picture>>() {
+            @Override
+            public void onChanged(@Nullable List<Picture> pictures) {
+                picturesList = pictures;
+                if (adapter != null) adapter.notifyDataSetChanged();
+            }
+        };
+
+        picturesListViewModel.getPicturesList().observe(this, picturesListObserver);
 
         ListView listView = findViewById(R.id.list_view);
         adapter = new PicturesListAdapter();
@@ -89,12 +74,12 @@ public class PicsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return data.size();
+            return picturesList.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return data.get(i);
+            return picturesList.get(i);
         }
 
         @Override
@@ -107,23 +92,28 @@ public class PicsActivity extends AppCompatActivity {
             if (view == null) {
                 view = inflater.inflate(R.layout.picture_row, null);
             }
-            final Picture picture = data.get(i);
+            final Picture picture = picturesList.get(i);
 
             TextView text = (TextView) view.findViewById(R.id.picture_title);
             TextView user = (TextView) view.findViewById(R.id.picture_user);
             TextView date = (TextView) view.findViewById(R.id.picture_date);
             text.setText(picture.title);
-            user.setText(picture.user.name);
-            date.setText(picture.publishDate.toString());
+            user.setText(picture.user);
+            date.setText(picture.date);
 
             final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-            model.LoadImage("s9.jpg", new ModelFirebase.LoadImageInterface() {
+            model.LoadImage(picture.url, new ModelFirebase.LoadImageInterface() {
                 @Override
-                public void afterSuccessfulImageLoad(byte[] bytes) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-                    imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp, imageView.getWidth(),
-                            imageView.getHeight(), false));
+                public void afterSuccessfulImageLoad(final byte[] bytes) {
+                    imageView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("TAG", "Alon " + imageView.getWidth());
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp, imageView.getWidth(),
+                                    imageView.getHeight(), false));
+                        }
+                    });
                 }
             });
 
