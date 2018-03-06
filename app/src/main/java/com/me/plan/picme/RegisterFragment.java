@@ -1,7 +1,8 @@
 package com.me.plan.picme;
 
-
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -18,14 +19,26 @@ import android.widget.Toast;
 import com.me.plan.picme.Model.Model;
 import com.me.plan.picme.Model.ModelFirebase;
 
-public class LoginFragment extends Fragment {
+
+public class RegisterFragment extends Fragment {
     private Model model;
 
-    public LoginFragment() {
+    public RegisterFragment() {
         model = Model.instance;
         // Required empty public constructor
     }
 
+    public static RegisterFragment newInstance() {
+        RegisterFragment fragment = new RegisterFragment();
+        Bundle args = new Bundle();
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +46,6 @@ public class LoginFragment extends Fragment {
         View myFragmentView = inflater.inflate(R.layout.fragment_login, container, false);
 
         final Button signInButton = (Button) myFragmentView.findViewById(R.id.signin);
-        final Button registerButton = (Button) myFragmentView.findViewById(R.id.button_register);
         final EditText inputEmail = (EditText) myFragmentView.findViewById(R.id.input_email);
         final EditText inputPassword = (EditText) myFragmentView.findViewById(R.id.input_password);
 
@@ -55,13 +67,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                ((MainActivity) getActivity()).replaceSignInFragmentWithRegister();
-            }
-        });
-
-        return myFragmentView;
+        return inflater.inflate(R.layout.fragment_register, container, false);
     }
 
     private void CheckSignInForm(EditText inputEmail, EditText inputPassword) {
@@ -96,4 +102,8 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
 }

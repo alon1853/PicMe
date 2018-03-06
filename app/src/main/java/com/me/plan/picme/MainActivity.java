@@ -34,4 +34,15 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.commit();
         }
     }
+
+    public void replaceSignInFragmentWithRegister() {
+        RegisterFragment registerFragment = new RegisterFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_container, registerFragment);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+    }
 }

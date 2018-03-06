@@ -2,9 +2,11 @@
     <string name="app_name">PicMe</string>
 
     <string name="hello_guest">Hello Guest, Please Sign In</string>
+    <string name="register_guest">Register New Account</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
+    <string name="register">Register</string>
     <string name="empty_email_or_email">Please insert Email and Password</string>
     <string name="wrong_email_or_password">Wrong Email or Password</string>
     <string name="signed_in_successfully">Signed In Successfully</string>
