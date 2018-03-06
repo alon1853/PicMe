@@ -11,14 +11,11 @@ import com.me.plan.picme.Model.Picture;
  * Created by Alon on 05/03/2018.
  */
 
-
 @Database(entities = {Picture.class}, version = 1)
-abstract class AppLocalStoreDb extends RoomDatabase {
+public abstract class AppLocalStore extends RoomDatabase {
     public abstract PictureDao pictureDao();
-}
 
-public class AppLocalStore {
-    public static AppLocalStoreDb db = Room.databaseBuilder(MyApplication.getMyContext(),
-            AppLocalStoreDb.class,
+    public static AppLocalStore db = Room.databaseBuilder(MyApplication.getMyContext(),
+            AppLocalStore.class,
             "database-name").build();
 }

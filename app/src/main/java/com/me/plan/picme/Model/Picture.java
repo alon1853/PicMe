@@ -21,7 +21,7 @@ public class Picture {
     public String date;
     public String url;
     public String user;
-    public float lastUpdated;
+    public long lastUpdated;
 
     @NonNull
     public String getId() {
@@ -64,11 +64,11 @@ public class Picture {
         this.user = user;
     }
 
-    public float getLastUpdated() {
+    public long getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(float lastUpdated) {
+    public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

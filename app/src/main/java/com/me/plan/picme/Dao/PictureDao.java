@@ -3,6 +3,7 @@ package com.me.plan.picme.Dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.me.plan.picme.Model.Picture;
@@ -24,7 +25,7 @@ public interface PictureDao {
     @Query("SELECT * FROM pictures WHERE id = :id")
     Picture findById(String id);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Picture... pictures);
 
     @Delete

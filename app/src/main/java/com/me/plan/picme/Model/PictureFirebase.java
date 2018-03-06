@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
@@ -22,11 +23,12 @@ public class PictureFirebase {
         void onComplete(T data);
     }
 
-    public static void getAllPicturesAndObserve(final Callback<List<Picture>> callback) {
-        Log.d("TAG", "getAllPicturesAndObserve");
+    public static void getAllPicturesAndObserve(long lastUpdate, final Callback<List<Picture>> callback) {
+        Log.d("TAG", "getAllPicturesAndObserve " + lastUpdate);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("pictures");
-        ValueEventListener listener = myRef.addValueEventListener(new ValueEventListener() {
+        Query query = myRef.orderByChild("lastUpdated").startAt(lastUpdate);
+        ValueEventListener listener = query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Picture> list = new LinkedList<Picture>();
@@ -43,6 +45,7 @@ public class PictureFirebase {
             }
         });
     }
+
     public static void addPicture(Picture picture){
         Log.d("TAG", "add picture to Firebase");
         HashMap<String, Object> json = picture.toJson();

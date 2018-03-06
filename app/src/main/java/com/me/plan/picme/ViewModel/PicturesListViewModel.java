@@ -19,7 +19,7 @@ public class PicturesListViewModel extends ViewModel {
 
     public PicturesListViewModel() {
         picturesListRepository = PicturesListRepository.instance;
-        this.pictures = picturesListRepository.getPicturesList();
+        this.pictures = picturesListRepository.getAllPictures();
     }
 
     public MutableLiveData<List<Picture>> getPicturesList() {
