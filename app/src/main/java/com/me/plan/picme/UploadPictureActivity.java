@@ -1,7 +1,10 @@
 package com.me.plan.picme;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -21,13 +24,15 @@ import com.me.plan.picme.Model.Picture;
 import com.me.plan.picme.Model.PictureFirebase;
 import com.me.plan.picme.Model.User;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class UploadPictureActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    final static int RESAULT_SUCCESS = 0;
+    final static int RESULT_LOAD_IMG = 0;
     Bitmap currentImageBitmap;
     Model model = Model.instance;
 
@@ -51,10 +56,25 @@ public class UploadPictureActivity extends AppCompatActivity {
             }
         });
 
-        Button capturePicture = (Button) findViewById(R.id.caoture_button);
+        Button capturePicture = (Button) findViewById(R.id.capture_button);
         capturePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        });
+
+        Button selectImageButton = (Button) findViewById(R.id.select_from_gallery_button);
+        selectImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -82,6 +102,23 @@ public class UploadPictureActivity extends AppCompatActivity {
             currentImageBitmap = (Bitmap) extras.get("data");
             ImageView mImageView = (ImageView) findViewById(R.id.thumbnail);
             mImageView.setImageBitmap(currentImageBitmap);
+        }
+
+        if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && data != null) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                currentImageBitmap = BitmapFactory.decodeStream(imageStream);
+                ImageView mImageView = (ImageView) findViewById(R.id.thumbnail);
+                mImageView.setImageBitmap(currentImageBitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast toast = Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        } else {
+            Toast toast = Toast.makeText(this, R.string.didnt_pick_image, Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
