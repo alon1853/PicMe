@@ -48,10 +48,15 @@ public class PictureFirebase {
 
     public static void addPicture(Picture picture){
         Log.d("TAG", "add picture to Firebase");
-        HashMap<String, Object> json = picture.toJson();
-        json.put("lastUpdated", ServerValue.TIMESTAMP);
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("pictures");
+        String key = myRef.push().getKey();
+        picture.setId(key);
+
+        HashMap<String, Object> json = picture.toJson();
+        json.put("lastUpdated", ServerValue.TIMESTAMP);
+
         myRef.child(picture.id).setValue(json);
     }
 }

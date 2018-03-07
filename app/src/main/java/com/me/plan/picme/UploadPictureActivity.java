@@ -17,6 +17,13 @@ import android.widget.Toast;
 
 import com.me.plan.picme.Model.Model;
 import com.me.plan.picme.Model.ModelFirebase;
+import com.me.plan.picme.Model.Picture;
+import com.me.plan.picme.Model.PictureFirebase;
+import com.me.plan.picme.Model.User;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class UploadPictureActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -28,6 +35,12 @@ public class UploadPictureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_picture);
+
+        User currentUser = model.getCurrentUser();
+        if (currentUser == null) {
+            // Finish activity if user is not logged in
+            finish();
+        }
 
         final EditText inputTitle = (EditText) findViewById(R.id.title_text);
         final Button uploadButton = (Button) findViewById(R.id.upload_button);
@@ -58,7 +71,7 @@ public class UploadPictureActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, R.string.select_picture, Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            UploadCurrentPicture();
+            UploadCurrentPicture(inputTitle);
         }
     }
 
@@ -72,23 +85,38 @@ public class UploadPictureActivity extends AppCompatActivity {
         }
     }
 
-    private void UploadCurrentPicture() {
+    private void UploadCurrentPicture(EditText inputTitle) {
+        Picture picture = new Picture();
+        picture.setUser(model.getCurrentUser().name);
+        picture.setTitle(inputTitle.getText().toString());
+        Date date = Calendar.getInstance().getTime();
+        picture.setDate(new SimpleDateFormat("dd/MM/yyyy").format(date));
+        picture.setUrl(picture.getTitle().trim() + picture.getDate()+".jpg");
+
+        PictureFirebase.addPicture(picture);
+
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         final Button uploadButton = (Button) findViewById(R.id.upload_button);
         uploadButton.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
 
-        model.UploadImage(currentImageBitmap, "alon.jpg", new ModelFirebase.UploadImageInterface() {
+        model.UploadImage(currentImageBitmap, picture.getUrl(), new ModelFirebase.UploadImageInterface() {
             @Override
             public void AfterSuccessfulUploadImage() {
                 Toast toast = Toast.makeText(UploadPictureActivity.this, R.string.picture_uploaded_successfully, Toast.LENGTH_SHORT);
                 toast.show();
+                finish();
             }
 
             @Override
             public void AfterFailedUploadImage() {
                 Toast toast = Toast.makeText(UploadPictureActivity.this, R.string.failed_to_upload_picture, Toast.LENGTH_SHORT);
                 toast.show();
+
+                final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+                final Button uploadButton = (Button) findViewById(R.id.upload_button);
+                uploadButton.setEnabled(true);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
