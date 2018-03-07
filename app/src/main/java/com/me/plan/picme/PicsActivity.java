@@ -2,9 +2,11 @@ package com.me.plan.picme;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -43,14 +46,13 @@ public class PicsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pics);
 
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
         User currentUser = model.getCurrentUser();
         if (currentUser == null) {
             // Finish activity if user is not logged in
             finish();
         }
 
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         picturesListViewModel = ViewModelProviders.of(this).get(PicturesListViewModel.class);
 
         final Observer<List<Picture>> picturesListObserver = new Observer<List<Picture>>() {
@@ -70,6 +72,15 @@ public class PicsActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view);
         adapter = new PicturesListAdapter();
         listView.setAdapter(adapter);
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fabUploadPicture);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PicsActivity.this, UploadPictureActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     class PicturesListAdapter extends BaseAdapter {

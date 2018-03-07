@@ -8,12 +8,21 @@
     <string name="full_name">Full Name</string>
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
+    <string name="title">Title</string>
+    <string name="upload">Upload</string>
     <string name="empty_email_or_email">Please insert Email and Password</string>
     <string name="empty_full_name_or_email_or_email">Please insert Full Name, Email and Password</string>
     <string name="wrong_email_or_password">Wrong Email or Password</string>
     <string name="signed_in_successfully">Signed In Successfully</string>
     <string name="registered_successfully">Registered Successfully</string>
+    <string name="title_upload_picture">Upload New Picture</string>
+    <string name="select_from_gallery">Select From Gallery</string>
+    <string name="capture_picture">Capture Picture</string>
+    <string name="empty_picture_title">Insert Picture Title</string>
+    <string name="select_picture">Please Select a Picture</string>
+    <string name="picture_uploaded_successfully">Picture Uploaded Successfully</string>
+    <string name="failed_to_upload_picture">Failed To Upload Picture</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_upload_picture">Upload New Picture</string>
 </resources>

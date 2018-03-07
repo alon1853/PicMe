@@ -1,5 +1,6 @@
 package com.me.plan.picme.Model;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,6 +14,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Alon on 23/02/2018.
@@ -104,6 +108,29 @@ public class ModelFirebase {
         });
     }
 
+    public void UploadImage(Bitmap bitmap, String imageName, final UploadImageInterface uploadImageInterface) {
+        Log.d("TAG", "Uploading image..");
+        StorageReference imageRef = storage.getReference().child(imageName);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.d("TAG", "Failed to upload image: " + exception.getMessage());
+                uploadImageInterface.AfterFailedUploadImage();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                uploadImageInterface.AfterSuccessfulUploadImage();
+            }
+        });
+    }
+
     public interface SignInInterface {
         void AfterSuccessfulSignIn();
         void AfterFailedSignIn();
@@ -116,5 +143,10 @@ public class ModelFirebase {
 
     public interface LoadImageInterface {
         void afterSuccessfulImageLoad(byte[] bytes);
+    }
+
+    public interface UploadImageInterface {
+        void AfterSuccessfulUploadImage();
+        void AfterFailedUploadImage();
     }
 }

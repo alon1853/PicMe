@@ -1,5 +1,7 @@
 package com.me.plan.picme.Model;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Alon on 23/02/2018.
  */
@@ -26,5 +28,9 @@ public class Model {
 
     public void LoadImage(String imagePath, final ModelFirebase.LoadImageInterface loadImageInterface) {
         modelFirebase.LoadImage(imagePath, loadImageInterface);
+    }
+
+    public void UploadImage(Bitmap bitmap, String imageName, ModelFirebase.UploadImageInterface uploadImageInterface) {
+        modelFirebase.UploadImage(bitmap, imageName, uploadImageInterface);
     }
 }
