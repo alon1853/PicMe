@@ -68,6 +68,7 @@ public class PicturesListRepository {
                 try {
                     lastUpdateDate = MyApplication.getMyContext()
                             .getSharedPreferences("TAG", MODE_PRIVATE).getLong("lastUpdateDate", 0);
+                    Log.d("TAG", "lastUpdateDate from sharedPreferences = " + lastUpdateDate);
                 } catch (Exception e){
                     Log.d("TAG", e.getMessage());
                 }
@@ -75,10 +76,9 @@ public class PicturesListRepository {
                     //3. update the local DB
                     long recentUpdate = lastUpdateDate;
                     for (Picture picture : data) {
-                        Log.d("TAG", "Alonnn size = " + data.size());
-                        Log.d("TAG", "Alonnn " + picture.id);
                         AppLocalStore.db.pictureDao().insertAll(picture);
                         if (picture.lastUpdated > recentUpdate) {
+                            Log.d("TAG", "Updating lastUpdated form picture with id = " + picture.id);
                             recentUpdate = picture.lastUpdated;
                         }
                         Log.d("TAG", "Updating: " + picture.toString());

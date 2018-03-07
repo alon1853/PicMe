@@ -1,10 +1,9 @@
 package com.me.plan.picme;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,24 +27,13 @@ public class RegisterFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static RegisterFragment newInstance() {
-        RegisterFragment fragment = new RegisterFragment();
-        Bundle args = new Bundle();
-
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View myFragmentView = inflater.inflate(R.layout.fragment_login, container, false);
+        View myFragmentView = inflater.inflate(R.layout.fragment_register, container, false);
 
-        final Button signInButton = (Button) myFragmentView.findViewById(R.id.signin);
+        final Button finishRegisterButton = (Button) myFragmentView.findViewById(R.id.finish_register);
+        final EditText inputFullName = (EditText) myFragmentView.findViewById(R.id.input_full_name);
         final EditText inputEmail = (EditText) myFragmentView.findViewById(R.id.input_email);
         final EditText inputPassword = (EditText) myFragmentView.findViewById(R.id.input_password);
 
@@ -53,7 +41,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    signInButton.performClick();
+                    finishRegisterButton.performClick();
                     return true;
                 }
 
@@ -61,28 +49,30 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        finishRegisterButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                CheckSignInForm(inputEmail, inputPassword);
+                CheckRegisterForm(inputFullName, inputEmail, inputPassword);
             }
         });
 
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        return myFragmentView;
     }
 
-    private void CheckSignInForm(EditText inputEmail, EditText inputPassword) {
-        if (inputEmail.getText().toString().equals("") || inputPassword.getText().toString().equals("")) {
-            Toast toast = Toast.makeText(getActivity(), R.string.empty_email_or_email, Toast.LENGTH_SHORT);
+    private void CheckRegisterForm(EditText inputFullName, EditText inputEmail, EditText inputPassword) {
+        if (inputFullName.getText().toString().equals("") ||
+            inputEmail.getText().toString().equals("") ||
+            inputPassword.getText().toString().equals("")) {
+            Toast toast = Toast.makeText(getActivity(), R.string.empty_full_name_or_email_or_email, Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            final ProgressBar progressBar = getView().findViewById(R.id.sign_in_progress_bar);
+            final ProgressBar progressBar = getView().findViewById(R.id.register_progress_bar);
             progressBar.setVisibility(View.VISIBLE);
 
-            ModelFirebase.SignInInterface signInInterface = new ModelFirebase.SignInInterface() {
+            ModelFirebase.RegisterInterface registerInterface = new ModelFirebase.RegisterInterface() {
                 @Override
-                public void AfterSuccessfulSignIn() {
+                public void AfterSuccessfulRegister() {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast toast = Toast.makeText(getActivity(), R.string.signed_in_successfully, Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity(), R.string.registered_successfully, Toast.LENGTH_SHORT);
                     toast.show();
 
                     Intent intent = new Intent(getActivity(), PicsActivity.class);
@@ -91,19 +81,17 @@ public class RegisterFragment extends Fragment {
                 }
 
                 @Override
-                public void AfterFailedSignIn() {
+                public void AfterFailedRegister() {
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast toast = Toast.makeText(getActivity(), R.string.wrong_email_or_password, Toast.LENGTH_SHORT);
                     toast.show();
                 }
             };
 
-            model.SignInWithEmailAndPassword(inputEmail.getText().toString(), inputPassword.getText().toString(), signInInterface);
+            model.createUserWithEmailAndPassword(inputFullName.getText().toString(),
+                    inputEmail.getText().toString(),
+                    inputPassword.getText().toString(),
+                    registerInterface);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 }

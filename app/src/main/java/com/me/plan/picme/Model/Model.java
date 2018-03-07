@@ -16,6 +16,9 @@ public class Model {
     public void SignInWithEmailAndPassword(String email, String password, ModelFirebase.SignInInterface signInInterface) {
         modelFirebase.SignInWithEmailAndPassword(email, password, signInInterface);
     }
+    public void createUserWithEmailAndPassword(String fullName, String email, String password, ModelFirebase.RegisterInterface registerInterface) {
+        modelFirebase.createUserWithEmailAndPassword(fullName, email, password, registerInterface);
+    }
 
     public User getCurrentUser() {
         return this.modelFirebase.getCurrentUser();

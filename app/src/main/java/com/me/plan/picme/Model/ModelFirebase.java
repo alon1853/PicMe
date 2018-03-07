@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -60,6 +61,31 @@ public class ModelFirebase {
                 });
     }
 
+    public void createUserWithEmailAndPassword(final String fullName, String email, String password, final RegisterInterface registerInterface) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Register success, update UI with the signed-in user's information
+                            Log.d("TAG", "createUserWithEmail:success");
+                            currentUser = mAuth.getCurrentUser();
+
+                            // Set current Full Name
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(fullName).build();
+                            currentUser.updateProfile(profileUpdates);
+
+                            registerInterface.AfterSuccessfulRegister();
+                        } else {
+                            // If register fails, display a message to the user.
+                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
+                            registerInterface.AfterFailedRegister();
+                        }
+                    }
+                });
+    }
+
     public void LoadImage(String imagePath, final LoadImageInterface loadImageInterface) {
         StorageReference storageRef = storage.getReference();
         StorageReference pathReference = storageRef.child(imagePath);
@@ -81,6 +107,11 @@ public class ModelFirebase {
     public interface SignInInterface {
         void AfterSuccessfulSignIn();
         void AfterFailedSignIn();
+    }
+
+    public interface RegisterInterface {
+        void AfterSuccessfulRegister();
+        void AfterFailedRegister();
     }
 
     public interface LoadImageInterface {

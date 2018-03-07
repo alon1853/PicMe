@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.me.plan.picme.Model.Model;
@@ -42,6 +43,8 @@ public class PicsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pics);
 
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         User currentUser = model.getCurrentUser();
         if (currentUser == null) {
             // Finish activity if user is not logged in
@@ -53,6 +56,10 @@ public class PicsActivity extends AppCompatActivity {
         final Observer<List<Picture>> picturesListObserver = new Observer<List<Picture>>() {
             @Override
             public void onChanged(@Nullable List<Picture> pictures) {
+                if (progressBar.getVisibility() == View.VISIBLE) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+
                 picturesList = pictures;
                 if (adapter != null) adapter.notifyDataSetChanged();
             }
@@ -108,7 +115,6 @@ public class PicsActivity extends AppCompatActivity {
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("TAG", "Alon " + imageView.getWidth());
                             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp, imageView.getWidth(),
                                     imageView.getHeight(), false));

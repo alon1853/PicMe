@@ -26,14 +26,13 @@ public class LoginFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        final Button signInButton = (Button) myFragmentView.findViewById(R.id.signin);
-        final Button registerButton = (Button) myFragmentView.findViewById(R.id.button_register);
+        final Button signInButton = (Button) myFragmentView.findViewById(R.id.sign_in_button);
+        final Button registerButton = (Button) myFragmentView.findViewById(R.id.register_button);
         final EditText inputEmail = (EditText) myFragmentView.findViewById(R.id.input_email);
         final EditText inputPassword = (EditText) myFragmentView.findViewById(R.id.input_password);
 
@@ -69,7 +68,7 @@ public class LoginFragment extends Fragment {
             Toast toast = Toast.makeText(getActivity(), R.string.empty_email_or_email, Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            final ProgressBar progressBar = getView().findViewById(R.id.sign_in_progress_bar);
+            final ProgressBar progressBar = getView().findViewById(R.id.register_progress_bar);
             progressBar.setVisibility(View.VISIBLE);
 
             ModelFirebase.SignInInterface signInInterface = new ModelFirebase.SignInInterface() {
