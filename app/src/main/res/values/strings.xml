@@ -9,6 +9,8 @@
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
     <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="publisher">Publisher</string>
     <string name="upload">Upload</string>
     <string name="empty_email_or_email">Please insert Email and Password</string>
     <string name="empty_full_name_or_email_or_email">Please insert Full Name, Email and Password</string>
