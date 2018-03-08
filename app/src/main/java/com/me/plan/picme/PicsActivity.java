@@ -9,12 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -107,28 +105,36 @@ public class PicsActivity extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            final PictureViewHolder mHolder;
+
             if (view == null) {
                 view = inflater.inflate(R.layout.picture_row, null);
+                mHolder = new PictureViewHolder();
+                mHolder.title = (TextView) view.findViewById(R.id.picture_title);
+                mHolder.user = (TextView) view.findViewById(R.id.picture_user);
+                mHolder.date = (TextView) view.findViewById(R.id.picture_date);
+                mHolder.image = (ImageView) view.findViewById(R.id.imageView);
+
+                view.setTag(mHolder);
+            } else {
+                mHolder = (PictureViewHolder) view.getTag();
             }
+
             final Picture picture = picturesList.get(i);
 
-            TextView text = (TextView) view.findViewById(R.id.picture_title);
-            TextView user = (TextView) view.findViewById(R.id.picture_user);
-            TextView date = (TextView) view.findViewById(R.id.picture_date);
-            text.setText(picture.title);
-            user.setText(picture.user);
-            date.setText(picture.date);
+            mHolder.title.setText(picture.title);
+            mHolder.user.setText(picture.user);
+            mHolder.date.setText(picture.date);
 
-            final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
             model.LoadImage(picture.url, new ModelFirebase.LoadImageInterface() {
                 @Override
                 public void afterSuccessfulImageLoad(final byte[] bytes) {
-                    imageView.post(new Runnable() {
+                    mHolder.image.post(new Runnable() {
                         @Override
                         public void run() {
                             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp, imageView.getWidth(),
-                                    imageView.getHeight(), false));
+                            mHolder.image.setImageBitmap(Bitmap.createScaledBitmap(bmp, mHolder.image.getWidth(),
+                                    mHolder.image.getHeight(), false));
                         }
                     });
                 }
@@ -136,5 +142,12 @@ public class PicsActivity extends AppCompatActivity {
 
             return view;
         }
+    }
+
+    protected static class PictureViewHolder {
+        TextView title;
+        TextView date;
+        TextView user;
+        ImageView image;
     }
 }

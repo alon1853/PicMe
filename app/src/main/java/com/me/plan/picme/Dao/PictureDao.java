@@ -29,6 +29,6 @@ public interface PictureDao {
     void insertAll(Picture... pictures);
 
     @Delete
-    void delete(Picture pictures);
+    void delete(Picture picture);
 
 }

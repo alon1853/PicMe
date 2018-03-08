@@ -87,11 +87,19 @@ public class PicturesListRepository {
                     editor.putLong("lastUpdateDate", recentUpdate);
                     editor.commit();
                 }
-                //return the complete student list to the caller
-                List<Picture> empList = AppLocalStore.db.pictureDao().getAll();
+
+//                List<Picture> tempList = AppLocalStore.db.pictureDao().getAll();
+//                for (Picture localPicture : tempList) {
+//                    if (data.indexOf(localPicture) == -1) {
+//                        AppLocalStore.db.pictureDao().delete(localPicture);
+//                    }
+//                }
+
+                //return the complete pictures list to the caller
+                List<Picture> picturesList = AppLocalStore.db.pictureDao().getAll();
                 Log.d("TAG","Finish updatePicturesDataInLocalStorage in thread");
 
-                return empList;
+                return picturesList;
             }
             return null;
         }

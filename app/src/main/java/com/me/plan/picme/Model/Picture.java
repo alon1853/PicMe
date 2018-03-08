@@ -78,6 +78,7 @@ public class Picture {
         result.put("title", title);
         result.put("date", date);
         result.put("url", url);
+        result.put("user", user);
         result.put("lastUpdated", lastUpdated);
         return result;
     }
