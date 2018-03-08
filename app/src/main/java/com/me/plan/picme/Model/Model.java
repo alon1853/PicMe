@@ -33,4 +33,8 @@ public class Model {
     public void UploadImage(Bitmap bitmap, String imageName, ModelFirebase.UploadImageInterface uploadImageInterface) {
         modelFirebase.UploadImage(bitmap, imageName, uploadImageInterface);
     }
+
+    public void getPicture(String pictureId, ModelFirebase.GetPictureInterface getPictureInterface) {
+        modelFirebase.getPicture(pictureId, getPictureInterface);
+    }
 }

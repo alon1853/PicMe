@@ -9,9 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -70,6 +72,17 @@ public class PicsActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view);
         adapter = new PicturesListAdapter();
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("TAG", "Row item was clicked at position: " + position);
+                Intent intent = new Intent(PicsActivity.this, PictureDetailsActivity.class);
+                intent.putExtra("PICID", picturesList.get(position).id);
+                Log.d("TAG","Picture id selected = " + picturesList.get(position).id);
+                startActivity(intent);
+            }
+        });
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fabUploadPicture);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {

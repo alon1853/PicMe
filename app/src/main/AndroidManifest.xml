@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.me.plan.picme">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -24,6 +25,10 @@
         <activity
             android:name=".UploadPictureActivity"
             android:label="@string/title_activity_upload_picture"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PictureDetailsActivity"
+            android:label="@string/title_activity_picture_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
