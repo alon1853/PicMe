@@ -90,7 +90,7 @@ public class PicturesListRepository {
 
 //                List<Picture> tempList = AppLocalStore.db.pictureDao().getAll();
 //                for (Picture localPicture : tempList) {
-//                    if (data.indexOf(localPicture) == -1) {
+//                    if (!data.contains(localPicture)) {
 //                        AppLocalStore.db.pictureDao().delete(localPicture);
 //                    }
 //                }
